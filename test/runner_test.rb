@@ -61,7 +61,7 @@ class RunnerTest < Test::Unit::TestCase
       runner.run_file(alternate_rspec_file)
       assert File.exists?(alternate_target_file)
       assert_equal "HYDRA", File.read(alternate_target_file)
-      assert !File.exists?(target_file), "Tests are double running!"
+      assert !File.exists?(target_file)
     end
 
     should "run rspec tests with pending examples" do

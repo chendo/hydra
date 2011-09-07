@@ -148,7 +148,7 @@ module Hydra #:nodoc:
     def run_rspec_file(file)
       # pull in rspec
       begin
-        require 'rspec'
+        require 'spec'
         require 'hydra/spec/hydra_formatter'
         # Ensure we override rspec's at_exit
         RSpec::Core::Runner.disable_autorun!
@@ -156,15 +156,22 @@ module Hydra #:nodoc:
         return ex.to_s
       end
       hydra_output = StringIO.new
-
-      config = [
-        '-f', 'RSpec::Core::Formatters::HydraFormatter',
-        file
-      ]
-
-      RSpec.instance_variable_set(:@world, nil)
-      RSpec::Core::Runner.run(config, hydra_output, hydra_output)
-
+      Spec::Runner.options.instance_variable_set(:@formatters, [
+        Spec::Runner::Formatter::HydraFormatter.new(
+          Spec::Runner.options.formatter_options,
+          hydra_output
+        )
+      ])
+      Spec::Runner.options.instance_variable_set(
+        :@example_groups, []
+      )
+      Spec::Runner.options.instance_variable_set(
+        :@files, [file]
+      )
+      Spec::Runner.options.instance_variable_set(
+        :@files_loaded, false
+      )
+      Spec::Runner.options.run_examples
       hydra_output.rewind
       output = hydra_output.read.chomp
       output = "" if output.gsub("\n","") =~ /^\.*$/

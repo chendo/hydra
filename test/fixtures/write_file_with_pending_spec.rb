@@ -1,5 +1,5 @@
 require 'tmpdir'
-require 'rspec'
+require 'spec'
 context "file writing" do
   it "writes to a file" do
     File.open(File.join(Dir.consistent_tmpdir, 'hydra_test.txt'), 'a') do |f|

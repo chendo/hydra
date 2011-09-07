@@ -1,4 +1,4 @@
-require 'rspec'
+require 'spec'
 require 'hydra/tmpdir'
 context "file writing" do
   it "writes to a file" do
